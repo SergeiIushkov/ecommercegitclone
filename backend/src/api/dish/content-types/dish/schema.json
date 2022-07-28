@@ -19,7 +19,7 @@
     },
     "image": {
       "type": "media",
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "allowedTypes": [
         "images"
@@ -33,6 +33,10 @@
     },
     "price": {
       "type": "integer"
+    },
+    "description": {
+      "type": "text",
+      "required": true
     }
   }
 }

@@ -1,0 +1,123 @@
+query Restaurant($id: ID!) {
+      restaurant(id: $id) {
+        data {
+          id
+          attributes {
+            name
+            dishes {
+              data {
+                id
+                attributes {
+                  name
+                  price
+                  image {
+                    data {
+                      attributes {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+
+// pages/restaurants/_id.vue
+    <template>
+      <div class="uk-container uk-container-xsmall">
+        <span class="uk-heading-small">
+          // Link to go back to the previous page
+          <NuxtLink class="uk-button uk-button-text" to="/">
+            <span uk-icon="arrow-left"></span> go back
+          </NuxtLink>
+        </span>
+    
+        // Displaying dishes
+        <div v-for="dish in dishes" :key="dish.id">
+          <div class="uk-card uk-card-default uk-child-width-1-2 uk-margin" uk-grid>
+            <div class="uk-card-body uk-card-small">
+              <h2 class="uk-card-title">{{ dish.attributes.name }}</h2>
+              <p>{{ restaurant.data.attributes.name }}</p>
+              <p>{{ dish.attributes.price }} $</p>
+              <button class="uk-button uk-button-primary uk-margin-xlarge-top">
+                Add to cart
+              </button>
+            </div>
+            <figure class="uk-card-media-right uk-cover-container">
+              <img
+                :src="getStrapiMedia(dish.attributes.image.data.attributes.url)"
+                :alt="dish.attributes.image.data.attributes.alternativeText"
+              />
+            </figure>
+          </div>
+        </div>
+      </div>
+    </template>
+    
+    <script>
+    import { getStrapiMedia } from '@/utils/media'
+    import restaurantQuery from '@/apollo/queries/restaurant'
+    export default {
+      data() {
+        return {
+          restaurant: Object,
+        }
+      },
+      apollo: {
+        restaurant: {
+          prefetch: true,
+          query: restaurantQuery,
+          variables() {
+            return { id: this.$route.params.id }
+          },
+        },
+      },
+      computed: {
+        dishes() {
+          if (!this.restaurant?.data) return []
+          return this.restaurant.data.attributes.dishes.data
+        },
+      },
+      methods: {
+        getStrapiMedia,
+      },
+    }
+    </script>
+
+
+
+
+
+
+
+
+<figure class="uk-card-media-right uk-cover-container">
+              <div class="col-md-12" v-for="(image,index) in images" :key="index">
+                <div v-if="imageId == image.imageId">
+              <img
+                :src="getStrapiMedia(dishes.attributes.image.data.attributes.url)" class="img-fluid"
+                :alt="dishes.attributes.image.data.attributes.alternativeText" 
+              />
+              </div>
+        </div>
+</figure>
+
+
+<figure class="uk-card-media-right uk-cover-container" >
+              <div v-for="image in dishes" :key="image.id">
+              
+                <div v-if="image == image.imageIndex">
+              <img
+                :src="getStrapiMedia(dishes.attributes.image.data.attributes.url)"  
+                :alt="dishes.attributes.image.data.attributes.alternativeText" 
+              />
+              </div>
+              
+              </div>
+        
+</figure>
